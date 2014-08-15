@@ -33,7 +33,7 @@ module.exports = (robot) ->
   # Listen to joins (which only happen on `TWITCHCLIENT 1`.), create a user
   # if they don't exist in the database!
   robot.adapter.bot.addListener 'join', (channel, username, message) ->
-    handleUser username
+    handleUser username unless username is 'jtv'
 
   # As a backup, listen to messages. Create a user if they don't exist in
   # the database!
