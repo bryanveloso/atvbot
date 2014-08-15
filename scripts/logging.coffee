@@ -6,6 +6,13 @@ firebase = new Firebase 'https://avalonstar.firebaseio.com/'
 
 module.exports = (robot) ->
   handleUser = (username) ->
+    # First, we need to fill the robot's brain with a viewer object.
+    if robot.brain.data.viewers[username]?
+      robot.brain.data.viewers[username] =
+        'name': username
+      robot.brain.save()
+      robot.logger.debug "#{username} has been added to the brain."
+
     # Check if we have a user on Firebase. If not, create it.
     viewers = firebase.child('viewers')
     viewers.child(username).once 'value', (snapshot) ->
@@ -13,7 +20,7 @@ module.exports = (robot) ->
         json =
           'username': username
         viewers.child(username).set json, (error) ->
-          robot.logger.debug "We have new blood: #{username}." if !error?
+          robot.logger.debug "#{username} has been added to Firebase." if error?
 
   robot.enter (msg) ->
     # Use TWITCHCLIENT 1.
