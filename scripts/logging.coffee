@@ -5,6 +5,16 @@ Firebase = require 'firebase'
 firebase = new Firebase 'https://avalonstar.firebaseio.com/'
 
 module.exports = (robot) ->
+  handleUser = (username) ->
+    # Check if we have a user on Firebase. If not, create it.
+    viewers = firebase.child('viewers')
+    viewers.child(username).once 'value', (snapshot) ->
+      unless snapshot.val()?
+        json =
+          'username': username
+        viewers.child(username).set json, (error) ->
+          robot.logger.debug "We have new blood: #{username}." if !error?
+
   robot.enter (msg) ->
     # Use TWITCHCLIENT 1.
     robot.adapter.command 'twitchclient', '1'
@@ -16,11 +26,9 @@ module.exports = (robot) ->
   # Listen to joins (which only happen on `TWITCHCLIENT 1`.), create a user
   # if they don't exist in the database!
   robot.adapter.bot.addListener 'join', (channel, username, message) ->
-    # Check if we have a user on Firebase. If not, create it.
-    viewers = firebase.child('viewers')
-    viewers.child(username).once 'value', (snapshot) ->
-      unless snapshot.val()?
-        json =
-          'username': username
-        viewers.child(username).set json, (error) ->
-          robot.logger.debug "We have new blood: #{username}." if !error?
+    handleUser username
+
+  # As a backup, listen to messages. Create a user if they don't exist in
+  # the database!
+  robot.adapter.bot.addListener 'message', (from, to, message) ->
+    handleUser from
