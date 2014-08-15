@@ -31,4 +31,4 @@ module.exports = (robot) ->
   # As a backup, listen to messages. Create a user if they don't exist in
   # the database!
   robot.adapter.bot.addListener 'message', (from, to, message) ->
-    handleUser from
+    handleUser from unless from is 'jtv'
