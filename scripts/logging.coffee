@@ -17,10 +17,16 @@ module.exports = (robot) ->
     viewers = firebase.child('viewers')
     viewers.child(username).once 'value', (snapshot) ->
       unless snapshot.val()?
-        json =
-          'username': username
-        viewers.child(username).set json, (error) ->
-          robot.logger.debug "#{username} has been added to Firebase." if error?
+        robot.http("https://api.twitch.tv/kraken/users/#{username}")
+          .get() (err, res, body) ->
+            viewer = JSON.parse(body)
+
+            # Let's record things.
+            json =
+              'display_name': viewer.display_name
+              'username': username
+            viewers.child(username).set json, (error) ->
+              robot.logger.debug "#{username} has been added to Firebase." if error?
 
   robot.enter (msg) ->
     # Use TWITCHCLIENT 1.
