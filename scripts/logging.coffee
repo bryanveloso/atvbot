@@ -29,7 +29,7 @@ module.exports = (robot) ->
   #             robot.logger.debug "#{username} has been added to Firebase." if error?
 
   robot.enter (msg) ->
-    robot.adapter.command 'CAP', 'REQ', ':twitch.tv/tags'
+    robot.adapter.command 'CAP', 'REQ', 'twitch.tv/tags'
 
   #   # Reset Hubot's autosave interval to 30s instead of 5.
   #   # This is to prevent unnecessary reloading of old data. :(
