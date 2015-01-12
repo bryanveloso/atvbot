@@ -4,8 +4,6 @@
 Firebase = require 'firebase'
 firebase = new Firebase 'https://avalonstar.firebaseio.com/'
 
-Message = require 'irc-message'
-
 module.exports = (robot) ->
   handleUser = (username) ->
   #   # First, we need to fill the robot's brain with a viewer object.
@@ -30,12 +28,6 @@ module.exports = (robot) ->
   #           viewers.child(username).set json, (error) ->
   #             robot.logger.debug "#{username} has been added to Firebase." if error?
 
-  robot.enter (msg) ->
-    robot.adapter.command 'CAP', 'REQ', 'twitch.tv/tags'
-
-  robot.hear /(.*)/, (msg) ->
-    console.log "Captured message: #{msg}"
-
   #   # Reset Hubot's autosave interval to 30s instead of 5.
   #   # This is to prevent unnecessary reloading of old data. :(
   #   robot.brain.resetSaveInterval 30
@@ -49,3 +41,7 @@ module.exports = (robot) ->
   # # the database!
   # robot.adapter.bot.addListener 'message', (from, to, message) ->
   #   handleUser from unless from is 'jtv'
+
+  # Use this when there's support for IRCv3 somewhere in Nodeland.
+  robot.enter (msg) ->
+    robot.adapter.command 'CAP', 'REQ', 'twitch.tv/tags'
