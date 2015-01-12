@@ -1,1 +1,1 @@
-web: bin/hubot -a irc --name Endymion --alias '!'
+web: bin/hubot -a irc --name Avalonstar --alias '!'
