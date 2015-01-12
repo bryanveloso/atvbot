@@ -33,6 +33,9 @@ module.exports = (robot) ->
   robot.enter (msg) ->
     robot.adapter.command 'CAP', 'REQ', 'twitch.tv/tags'
 
+  robot.hear /(.*)/, (msg) ->
+    console.log "Captured message: #{msg}"
+
   #   # Reset Hubot's autosave interval to 30s instead of 5.
   #   # This is to prevent unnecessary reloading of old data. :(
   #   robot.brain.resetSaveInterval 30
