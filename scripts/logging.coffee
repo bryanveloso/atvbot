@@ -4,6 +4,8 @@
 Firebase = require 'firebase'
 firebase = new Firebase 'https://avalonstar.firebaseio.com/'
 
+Message = require 'irc-message'
+
 module.exports = (robot) ->
   handleUser = (username) ->
   #   # First, we need to fill the robot's brain with a viewer object.
