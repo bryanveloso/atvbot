@@ -13,6 +13,7 @@ module.exports = (robot) ->
   # Listening for incoming host notifications.
   # Because hosting is only reported to the broadcaster's account, this code
   # is required to be run from a bot linked to said account.
+<<<<<<< HEAD
   robot.hear /^([a-zA-Z0-9_]*) is now hosting you for (\d*) viewers.$/, (msg) ->
     if msg.envelope.user.name is 'jtv'
       hosts = hosts.push()
@@ -43,4 +44,3 @@ module.exports = (robot) ->
   robot.hear /^([a-zA-Z0-9_]*) just subscribed! (\d{1,2}) months in a row!$/, (msg) ->
     if msg.envelope.user.name is 'twitchnotify'
       console.log "Stuff."
-
