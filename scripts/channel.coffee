@@ -6,7 +6,7 @@ module.exports = (robot) ->
   # Because hosting is only reported to the broadcaster's account, this code
   # is required to be run from a bot linked to said account.
   robot.hear /(.*)/, (msg) ->
-    conosle.log "Heard something."
+    console.log "Heard something."
     console.log msg
 
   robot.hear /hosting/, (msg) ->
