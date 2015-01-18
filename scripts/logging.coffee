@@ -30,7 +30,7 @@ module.exports = (robot) ->
 
   robot.enter (msg) ->
     # Use TWITCHCLIENT 1.
-    robot.adapter.command 'twitchclient', '1'
+    robot.adapter.command 'twitchclient', '3'
 
     # Reset Hubot's autosave interval to 30s instead of 5.
     # This is to prevent unnecessary reloading of old data. :(
