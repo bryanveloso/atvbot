@@ -12,25 +12,17 @@ module.exports = (robot) ->
   # handleUser().
   handleUser = (username) ->
     # First, we need to fill the robot's brain with a viewer object.
-    if robot.brain.data.viewers[username]?
-      robot.brain.data.viewers[username] =
-        'name': username
-      robot.brain.save()
-      robot.logger.info "#{username} has been added to the brain."
+    unless robot.brain.data.viewers[username]?
+      robot.brain.data.viewers[username] = {'name': username}
+      robot.logger.debug "#{username} has been added to the brain."
 
     # Check if we have a user on Firebase. If not, create it.
     viewers.child(username).once 'value', (snapshot) ->
       unless snapshot.val()?
-        robot.http("https://api.twitch.tv/kraken/users/#{username}")
-          .get() (err, res, body) ->
-            viewer = JSON.parse(body)
-
-            # Let's record things.
-            json =
-              'display_name': viewer.display_name
-              'username': username
-            viewers.child(username).set json, (error) ->
-              robot.logger.info "#{username} has been added to Firebase."
+        robot.http("https://api.twitch.tv/kraken/users/#{username}").get() (err, res, body) ->
+          json = {'display_name': body.display_name, 'username': username}
+          viewers.child(username).set json, (error) ->
+            robot.logger.debug "#{username} has been added to Firebase."
 
   # handleMessage().
   handleMessage = (message, data, is_emote) ->
