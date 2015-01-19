@@ -74,12 +74,12 @@ module.exports = (robot) ->
   # which, unfortunately, neither Hubot nor Hubot IRC do natively.
   robot.adapter.bot.addListener 'action', (from, to, message) ->
     # If the user emotes, set json.emote to true.
-    handleMessage message, from, true
+    handleMessage message, robot.brain.userForName(from), true
     handleUser from
 
   robot.adapter.bot.addListener 'message', (from, to, message) ->
     # Listen for general messages.
-    handleMessage message, from, false
+    handleMessage message, robot.brain.userForName(from), false
     handleUser from
 
   # Listening for special users (e.g., turbo, staff, subscribers)
