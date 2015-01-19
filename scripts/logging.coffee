@@ -44,6 +44,7 @@ module.exports = (robot) ->
         # Message data.
         'timestamp': timestamp
         'message': message
+        'emotes': firedata?.emotes or []
         'is_emote': is_emote
 
       # Send the message to Firebase!
