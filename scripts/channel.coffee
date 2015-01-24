@@ -21,3 +21,17 @@ module.exports = (robot) ->
         viewers: msg.match[2]
       , (error) ->
         console.log "We've been hosted by #{msg.match[1]}."
+
+  # Listening for incoming subscription notifications. :O
+  robot.hear /^([a-zA-Z0-9_]*) just subscribed!$/, (msg) ->
+    if msg.envelope.user.name is 'twitchnotify'
+
+      subscribers.child(username).on 'child_added', (snapshot) ->
+        unless snapshot.val()?
+          timestamp = Firebase.ServerValue.TIMESTAMP
+          subscribers = subscribers.push()
+          subscribers.setWithPriority
+            username: msg.match[1],
+            timestamp: timestamp
+          , timestamp, (error) ->
+            console.log "#{msg.match[1]} has just subscribed!"
