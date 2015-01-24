@@ -25,7 +25,9 @@ module.exports = (robot) ->
   # Listening for incoming subscription notifications. :O
   robot.hear /^([a-zA-Z0-9_]*) just subscribed!$/, (msg) ->
     if msg.envelope.user.name is 'twitchnotify'
-
+      # Check if they're already a subscriber, if they're not, then add
+      # them to Firebase. We're going to need to check when they're sub will
+      # be running out as well, etc.
       subscribers.child(username).on 'child_added', (snapshot) ->
         unless snapshot.val()?
           timestamp = Firebase.ServerValue.TIMESTAMP
@@ -35,3 +37,10 @@ module.exports = (robot) ->
             timestamp: timestamp
           , timestamp, (error) ->
             console.log "#{msg.match[1]} has just subscribed!"
+
+  # Listening for incoming re-subscription notifications.
+  # This time we capture the number of months they've been subscribed.
+  robot.hear /^([a-zA-Z0-9_]*) just subscribed! (\d{1,2}) months in a row!$/, (msg) ->
+    if msg.envelope.user.name is 'twitchnotify'
+      console.log "Stuff."
+
