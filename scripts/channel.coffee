@@ -24,8 +24,9 @@ module.exports = (robot) ->
     if msg.envelope.user.name is 'jtv'
       # First, push the data to Pusher to power the notification.
       username = msg.match[1]
-      pusher.trigger 'live', 'hosted',
-        username: username
+      if msg.match[2] > 0
+        pusher.trigger 'live', 'hosted',
+          username: username
 
       # Push the data to Firebase for safe keeping.
       hosts = hosts.push()
