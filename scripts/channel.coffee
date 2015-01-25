@@ -58,7 +58,7 @@ module.exports = (robot) ->
   # Backup command for calling subscribers.
   # Strictly for testing and in case anything goes wrong with TwitchNotify.
   robot.respond /s ([a-zA-Z0-9_]*)/, (msg) ->
-    if robot.auth.hasRole(msg.envelope.user, ['admin'])
+    if msg.envelope.user.name is 'Avalonstar'
       username = msg.match[1] or 'Test'
       pusher.trigger 'live', 'subscribed',
         username: username
