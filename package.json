@@ -24,7 +24,8 @@
     "firebase": "^2.1.1",
     "hubot": ">=2.11.0",
     "hubot-irc": "^0.2.7",
-    "hubot-scripts": ">=2.5.16"
+    "hubot-scripts": ">=2.5.16",
+    "pusher": "^1.0.2"
   },
   "engines": {
     "node": "0.10.20",
