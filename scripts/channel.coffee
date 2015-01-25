@@ -51,6 +51,7 @@ module.exports = (robot) ->
     if msg.envelope.user.name is 'twitchnotify'
       console.log "Stuff."
 
-  robot.respond /s/, (msg) ->
+  robot.respond /s ([a-zA-Z0-9_]*)/, (msg) ->
+    username = msg.match[1] or 'Test'
     pusher.trigger 'live', 'subscribed',
-      username: 'Avalonstar'
+      username: username
