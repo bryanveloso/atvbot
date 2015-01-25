@@ -5,6 +5,13 @@
 Firebase = require 'firebase'
 firebase = new Firebase 'https://avalonstar.firebaseio.com/'
 
+# Pusher.
+Pusher = require 'pusher'
+pusher = new Pusher
+  appId: process.env.PUSHER_APP_ID
+  key: process.env.PUSHER_KEY
+  secret: process.env.PUSHER_SECRET
+
 # Firebase keys.
 hosts = firebase.child('hosts')
 subscribers = firebase.child('subscribers')
@@ -43,3 +50,7 @@ module.exports = (robot) ->
   robot.hear /^([a-zA-Z0-9_]*) just subscribed! (\d{1,2}) months in a row!$/, (msg) ->
     if msg.envelope.user.name is 'twitchnotify'
       console.log "Stuff."
+
+  robot.respond /s/, (msg) ->
+    pusher.trigger 'live', 'subscribed'
+      username: 'Avalonstar'
