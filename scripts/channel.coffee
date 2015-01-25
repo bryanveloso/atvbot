@@ -63,3 +63,18 @@ module.exports = (robot) ->
       username = msg.match[1] or 'Test'
       pusher.trigger 'live', 'subscribed',
         username: username
+
+  # Backup command for calling donations.
+  # Strictly for testing.
+  robot.respond /s ([a-zA-Z0-9_]*)/, (msg) ->
+    if msg.envelope.user.name is 'avalonstar'
+      username = msg.match[1]
+      data =
+        nickname: username
+        amount: 0
+        message: "Sup?"
+      robot.http("https://api.twitch.tv/kraken/channels/avalonstar")
+        .header('Content', 'application/json')
+        .header('Authorization', 'APIKey apikey=nuZOkYmLF37yQJdzNLWLRA')
+        .post(data) (err, res, body) ->
+          console.log "Mock donation for #{username} complete.'
