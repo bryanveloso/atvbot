@@ -52,5 +52,5 @@ module.exports = (robot) ->
       console.log "Stuff."
 
   robot.respond /s/, (msg) ->
-    pusher.trigger 'live', 'subscribed'
+    pusher.trigger 'live', 'subscribed',
       username: 'Avalonstar'
