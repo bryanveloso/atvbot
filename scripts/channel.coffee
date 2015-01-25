@@ -22,36 +22,43 @@ module.exports = (robot) ->
   # is required to be run from a bot linked to said account.
   robot.hear /^([a-zA-Z0-9_]*) is now hosting you for (\d*) viewers.$/, (msg) ->
     if msg.envelope.user.name is 'jtv'
+      # First, push the data to Pusher to power the notification.
+      username = msg.match[1]
+      pusher.trigger 'live', 'hosted',
+        username: username
+
+      # Push the data to Firebase for safe keeping.
       hosts = hosts.push()
       hosts.set
-        username: msg.match[1],
+        username: username
         viewers: msg.match[2]
       , (error) ->
-        console.log "We've been hosted by #{msg.match[1]}."
+        console.log "We've been hosted by #{username}."
 
   # Listening for incoming subscription notifications. :O
   robot.hear /^([a-zA-Z0-9_]*) just subscribed!$/, (msg) ->
     if msg.envelope.user.name is 'twitchnotify'
-      # Check if they're already a subscriber, if they're not, then add
-      # them to Firebase. We're going to need to check when they're sub will
-      # be running out as well, etc.
-      subscribers.child(username).on 'child_added', (snapshot) ->
-        unless snapshot.val()?
-          timestamp = Firebase.ServerValue.TIMESTAMP
-          subscribers = subscribers.push()
-          subscribers.setWithPriority
-            username: msg.match[1],
-            timestamp: timestamp
-          , timestamp, (error) ->
-            console.log "#{msg.match[1]} has just subscribed!"
+      # Take the name and push it on through.
+      username = msg.match[1]
+      pusher.trigger 'live', 'subscribed',
+        username: username
+      robot.logger.debug "#{username} has just subscribed!"
 
   # Listening for incoming re-subscription notifications.
   # This time we capture the number of months they've been subscribed.
   robot.hear /^([a-zA-Z0-9_]*) just subscribed! (\d{1,2}) months in a row!$/, (msg) ->
     if msg.envelope.user.name is 'twitchnotify'
-      console.log "Stuff."
+      # Take the name and push it on through.
+      username = msg.match[1]
+      pusher.trigger 'live', 'subscribed',
+        username: username
+        length: msg.match[2]
+      robot.logger.debug "#{username} has just subscribed!"
 
+  # Backup command for calling subscribers.
+  # Strictly for testing and in case anything goes wrong with TwitchNotify.
   robot.respond /s ([a-zA-Z0-9_]*)/, (msg) ->
-    username = msg.match[1] or 'Test'
-    pusher.trigger 'live', 'subscribed',
-      username: username
+    if robot.auth.hasRole(msg.envelope.user, ['admin'])
+      username = msg.match[1] or 'Test'
+      pusher.trigger 'live', 'subscribed',
+        username: username
