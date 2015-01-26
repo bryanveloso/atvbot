@@ -66,7 +66,7 @@ module.exports = (robot) ->
 
   # Backup command for calling donations.
   # Strictly for testing.
-  robot.respond /s ([a-zA-Z0-9_]*)/, (msg) ->
+  robot.respond /d ([a-zA-Z0-9_]*)/, (msg) ->
     if msg.envelope.user.name is 'avalonstar'
       username = msg.match[1]
       data =
