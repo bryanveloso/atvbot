@@ -73,8 +73,6 @@ module.exports = (robot) ->
         nickname: username
         amount: 0
         message: "Sup?"
-      robot.http('https://imraising.tv/api/v1/listen')
-        .header('Content', 'application/json')
-        .header('Authorization', 'APIKey apikey=nuZOkYmLF37yQJdzNLWLRA')
+      robot.http('https://imraising.tv/api/v1/listen?apikey=nuZOkYmLF37yQJdzNLWLRA')
         .post(data) (err, res, body) ->
           console.log "Mock donation for #{username} complete."
