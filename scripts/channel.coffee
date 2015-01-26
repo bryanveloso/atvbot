@@ -73,8 +73,8 @@ module.exports = (robot) ->
         nickname: username
         amount: 0
         message: "Sup?"
-      robot.http("https://api.twitch.tv/kraken/channels/avalonstar")
+      robot.http('https://imraising.tv/api/v1/listen')
         .header('Content', 'application/json')
         .header('Authorization', 'APIKey apikey=nuZOkYmLF37yQJdzNLWLRA')
         .post(data) (err, res, body) ->
-          console.log "Mock donation for #{username} complete.'
+          console.log "Mock donation for #{username} complete."
