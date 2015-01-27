@@ -66,13 +66,13 @@ module.exports = (robot) ->
   # Listeners. The below functions allow us to distinguish emotes from messages
   # which, unfortunately, neither Hubot nor Hubot IRC do natively.
   robot.adapter.bot.addListener 'action', (from, to, message) ->
-    unless from is 'jtv'
+    unless from is 'jtv' or 'twitchnotify'
       # If the user emotes, set json.emote to true.
       handleUser from
       handleMessage message, robot.brain.userForName(from), true
 
   robot.adapter.bot.addListener 'message', (from, to, message) ->
-    unless from is 'jtv'
+    unless from is 'jtv' or 'twitchnotify'
       # Listen for general messages.
       handleUser from
       handleMessage message, robot.brain.userForName(from), false
