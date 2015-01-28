@@ -16,10 +16,9 @@ module.exports = (robot) ->
     if msg.envelope.user.name is 'jtv'
       # First, push the data to Pusher to power the notification.
       username = msg.match[1]
-      if parseInt(msg.match[2], 10) > 0
-        pusher.trigger 'live', 'hosted',
-          username: username
-        console.log "We've been hosted by #{username}."
+      pusher.trigger 'live', 'hosted',
+        username: username
+      console.log "We've been hosted by #{username}."
 
   # Listening for incoming subscription notifications. :O
   robot.hear /^([a-zA-Z0-9_]*) just subscribed!$/, (msg) ->
