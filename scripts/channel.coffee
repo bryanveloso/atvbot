@@ -24,16 +24,9 @@ module.exports = (robot) ->
     if msg.envelope.user.name is 'jtv'
       # First, push the data to Pusher to power the notification.
       username = msg.match[1]
-      if msg.match[2] > 0
+      if parseInt(msg.match[2], 10) > 0
         pusher.trigger 'live', 'hosted',
           username: username
-
-      # Push the data to Firebase for safe keeping.
-      hosts = hosts.push()
-      hosts.set
-        username: username
-        viewers: msg.match[2]
-      , (error) ->
         console.log "We've been hosted by #{username}."
 
   # Listening for incoming subscription notifications. :O
