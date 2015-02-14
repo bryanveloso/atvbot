@@ -31,7 +31,7 @@ module.exports = (robot) ->
 
   # Listening for incoming re-subscription notifications.
   # This time we capture the number of months they've been subscribed.
-  robot.hear /^([a-zA-Z0-9_]*) just subscribed! (\d{1,2}) months in a row!$/, (msg) ->
+  robot.hear /^([a-zA-Z0-9_]*) subscribed for (\d{1,2}) months in a row!$/, (msg) ->
     if msg.envelope.user.name is 'twitchnotify'
       # Take the name and push it on through.
       username = msg.match[1]
