@@ -21,11 +21,11 @@
     "url": "https://github.com/github/hubot.git"
   },
   "dependencies": {
-    "firebase": "^2.1.1",
-    "hubot": ">=2.11.0",
+    "firebase": "^2.2.0",
+    "hubot": ">=2.11.1",
     "hubot-irc": "^0.2.7",
     "hubot-scripts": ">=2.5.16",
-    "pusher": "^1.0.2"
+    "pusher": "^1.0.4"
   },
   "engines": {
     "node": "0.10.20",
