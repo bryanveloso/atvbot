@@ -21,6 +21,7 @@
     "url": "https://github.com/github/hubot.git"
   },
   "dependencies": {
+    "cron": "^1.0.6",
     "firebase": "^2.2.0",
     "hubot": ">=2.11.1",
     "hubot-irc": "^0.2.7",
