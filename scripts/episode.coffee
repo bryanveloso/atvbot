@@ -2,7 +2,6 @@
 #   Functionality related to episode management.
 
 CronJob = require('cron').CronJob
-moment = require 'moment'
 path = require 'path'
 
 # API Endpoints.
