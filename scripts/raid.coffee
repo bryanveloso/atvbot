@@ -5,12 +5,6 @@
 #   hubot raider <username> - Searches Twitch for <username> and returns a follow message plus last game played.
 
 module.exports = (robot) ->
-  get_status = ->
-    robot.http('http://avalonstar.tv/live/status/').get() (err, res, body) ->
-      console.log body
-      status = JSON.parse(body)
-      return status
-
   robot.respond /raider ([a-zA-Z0-9_]*)/i, (msg) ->
     # This is the backend portion of the !raider command in Elsydeon. However,
     # unlike Elsy it will respond silently.
@@ -24,19 +18,22 @@ module.exports = (robot) ->
           return
 
         # Get the status of the Episode from the API.
-        status = get_status()
+        robot.http('http://avalonstar.tv/live/status/').get() (err, res, body) ->
+          status = JSON.parse(body)
 
-        # Let's record this raid to the Avalonstar API.
-        # First compose the JSON needed to send it over.
-        json =
-          'broadcast': status.episode
-          'game': streamer.game
-          'raider': streamer.name
-          'timestamp': new Date(Date.now()).toISOString()
+          # Let's record this raid to the Avalonstar API.
+          json =
+            'broadcast': status.episode
+            'game': streamer.game
+            'raider': streamer.name
+            'timestamp': new Date(Date.now()).toISOString()
+          robot.http('http://avalonstar.tv/api/raids/')
+            .post(json) (err, res, body) ->
+              if err
+                robot.logger.error "The raid by #{query} couldn't be recorded."
+                return
+              robot.logger.info "The raid by #{query} was recorded."
 
-  robot.respond /status/i, (msg) ->
-    status = get_status()
-    console.log status
-    console.log status.episode
-    msg.send "status #{get_status()}"
-    msg.send "episode #{status.episode}"
+      # Let's get outta here.
+      return
+
