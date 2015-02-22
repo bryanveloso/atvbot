@@ -34,5 +34,7 @@ module.exports = (robot) ->
 
   robot.respond /status/i, (msg) ->
     status = get_status()
-    msg.send get_status()
-    msg.send status.episode
+    console.log status
+    console.log status.episode
+    msg.send "status #{get_status()}"
+    msg.send "episode #{status.episode}"
