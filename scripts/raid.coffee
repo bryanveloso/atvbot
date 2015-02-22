@@ -4,11 +4,11 @@
 # Commands:
 #   hubot raider <username> - Searches Twitch for <username> and returns a follow message plus last game played.
 
-get_status = ->
-  robot.http('http://avalonstar.tv/live/status/').get() (err, res, body) ->
-    return JSON.parse(body)
-
 module.exports = (robot) ->
+  get_status = ->
+    robot.http('http://avalonstar.tv/live/status/').get() (err, res, body) ->
+      return JSON.parse(body)
+
   robot.respond /raider ([a-zA-Z0-9_]*)/i, (msg) ->
     # This is the backend portion of the !raider command in Elsydeon. However,
     # unlike Elsy it will respond silently.
