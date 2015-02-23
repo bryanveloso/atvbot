@@ -19,13 +19,13 @@ module.exports = (robot) ->
 
         # Get the status of the Episode from the API.
         robot.http('http://avalonstar.tv/live/status/').get() (err, res, body) ->
-          status = JSON.parse(body)
+          episode = JSON.parse(body)
 
           # Let's record this raid to the Avalonstar API -if- and only if the
           # episode is marked as episodic.
-          if status.is_episodic
+          if episode.is_episodic
             json = JSON.stringify
-              'broadcast': status.episode
+              'broadcast': episode.number
               'game': streamer.game
               'raider': streamer.name
               'timestamp': new Date(Date.now()).toISOString()
