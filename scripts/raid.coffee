@@ -40,13 +40,12 @@ module.exports = (robot) ->
   robot.respond /testraid/i, (msg) ->
     # Testing raids.
     # Get the status of the Episode from the API.
-    json =
+    json = JSON.stringify
       'broadcast': 115
       'game': 'StepMania'
       'raider': 'avalonstar'
       'timestamp': new Date(Date.now()).toISOString()
-    robot.http('http://avalonstar.tv/api/raids/').post(json) (err, res, body) ->
-      if err
-        robot.logger.error "The raid couldn't be recorded."
-        return
-      robot.logger.info "The raid was recorded."
+    robot.http('http://avalonstar.tv/api/raids/')
+      .header('Content-Type', 'application/json')
+      .post(json) (err, res, body) ->
+        console.log(body)
