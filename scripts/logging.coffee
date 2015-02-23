@@ -20,7 +20,7 @@ module.exports = (robot) ->
     viewers.child(username).once 'value', (snapshot) ->
       unless snapshot.val()?
         robot.http("https://api.twitch.tv/kraken/users/#{username}").get() (err, res, body) ->
-          json = {'display_name': body.display_name, 'username': username}
+          json = {'display_name': body.display_name or username, 'username': username}
           viewers.child(username).set json, (error) ->
             robot.logger.debug "#{username} has been added to Firebase."
 
