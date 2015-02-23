@@ -41,7 +41,7 @@ module.exports = (robot) ->
     # Testing raids.
     # Get the status of the Episode from the API.
     json = JSON.stringify
-      'broadcast': 115
+      'broadcast': 114
       'game': 'StepMania'
       'raider': 'avalonstar'
       'timestamp': new Date(Date.now()).toISOString()
