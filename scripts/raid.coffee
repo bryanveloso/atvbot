@@ -42,13 +42,13 @@ module.exports = (robot) ->
     # Get the status of the Episode from the API.
     robot.http('http://avalonstar.tv/live/status/').get() (err, res, body) ->
       status = JSON.parse(body)
-
       json =
         'broadcast': status.episode
         'game': 'StepMania'
         'raider': 'avalonstar'
         'timestamp': new Date(Date.now()).toISOString()
-      robot.http('http://avalonstar.tv/api/raids')
+
+      robot.http('http://avalonstar.tv/api/raids/')
         .post(json) (err, res, body) ->
           if err
             robot.logger.error "The raid by #{query} couldn't be recorded."
