@@ -18,16 +18,15 @@ module.exports = (robot) ->
       username = msg.match[1]
       pusher.trigger 'live', 'hosted',
         username: username
-      console.log "We've been hosted by #{username}."
+      robot.logger.info "We've been hosted by #{username}."
 
   # Listening for incoming subscription notifications. :O
   robot.hear /^([a-zA-Z0-9_]*) just subscribed!$/, (msg) ->
     if msg.envelope.user.name is 'twitchnotify'
       # Take the name and push it on through.
-      username = msg.match[1]
       pusher.trigger 'live', 'subscribed',
         username: username
-      robot.logger.debug "#{username} has just subscribed!"
+      robot.logger.info "#{username} has just subscribed!"
 
   # Listening for incoming re-subscription notifications.
   # This time we capture the number of months they've been subscribed.
@@ -38,7 +37,7 @@ module.exports = (robot) ->
       pusher.trigger 'live', 'subscribed',
         username: username
         length: msg.match[2]
-      robot.logger.debug "#{username} has just subscribed!"
+      robot.logger.info "#{username} has just subscribed!"
 
   # Backup command for calling subscribers.
   # Strictly for testing and in case anything goes wrong with TwitchNotify.
@@ -56,7 +55,7 @@ module.exports = (robot) ->
       data =
         nickname: username
         amount: 0
-        message: "Sup?"
+        message: 'Sup?'
       robot.http('https://imraising.tv/api/v1/listen?apikey=nuZOkYmLF37yQJdzNLWLRA')
         .post(data) (err, res, body) ->
-          console.log "Mock donation for #{username} complete."
+          robot.logger.info "Mock donation for #{username} complete."
