@@ -23,6 +23,7 @@ module.exports = (robot) ->
   # Listening for incoming subscription notifications. :O
   robot.hear /^([a-zA-Z0-9_]*) just subscribed!$/, (msg) ->
     if msg.envelope.user.name is 'twitchnotify'
+      username = msg.match[1]
       # Take the name and push it on through.
       pusher.trigger 'live', 'subscribed',
         username: username
@@ -46,6 +47,15 @@ module.exports = (robot) ->
       username = msg.match[1] or 'Test'
       pusher.trigger 'live', 'subscribed',
         username: username
+
+  robot.respond /ts ([a-zA-Z0-9_]*)/, (msg) ->
+    if msg.envelope.user.name is 'avalonstar'
+      username = msg.match[1] or 'Test'
+      robot.http("http://avalonstar.tv/api/tickets/#{username}/").get() (err, res, body) ->
+        if res.statusCode is 200
+          msg.send "#{username} is a subscriber."
+        else
+          msg.send "#{username} isn't subscribed."
 
   # Backup command for calling donations.
   # Strictly for testing.
