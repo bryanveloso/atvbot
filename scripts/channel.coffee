@@ -9,6 +9,24 @@ pusher = new Pusher
   secret: process.env.PUSHER_SECRET
 
 module.exports = (robot) ->
+  # Subscriber functions.
+  addSubscriber = (username, callback) ->
+    # Take the name and push it on through.
+    pusher.trigger 'live', 'subscribed',
+      username: username
+    robot.logger.info "#{username} has just subscribed!"
+
+    # Create the ticket using the API.
+    json = JSON.stringify
+      'name': username
+    robot.http('http://avalonstar.tv/api/tickets/')
+      .header('Content-Type', 'application/json')
+      .post(json) (err, res, body) ->
+        # Success message.
+        ticket = JSON.parse(body)
+        statusCode = res.statusCode
+        callback ticket, statusCode
+
   # Listening for incoming host notifications.
   # Because hosting is only reported to the broadcaster's account, this code
   # is required to be run from a bot linked to said account.
@@ -24,10 +42,20 @@ module.exports = (robot) ->
   robot.hear /^([a-zA-Z0-9_]*) just subscribed!$/, (msg) ->
     if msg.envelope.user.name is 'twitchnotify'
       username = msg.match[1]
-      # Take the name and push it on through.
-      pusher.trigger 'live', 'subscribed',
-        username: username
-      robot.logger.info "#{username} has just subscribed!"
+      robot.http("http://avalonstar.tv/api/tickets/#{username}/").get() (err, res, body) ->
+        # This is a re-subscription.
+        # The user has been found in the API; they've been a subscriber.
+        if res.statusCode is 200
+          puser.trigger 'live', 'resubscribed',
+            username: username
+          robot.logger.info "#{username} has just re-subscribed!"
+          return
+        # This is a new subscription.
+        # The user hasn't been found in the API, so let's create it.
+        else if res.statusCode is 404
+          addSubscriber username, (ticket, status) ->
+            robot.logger.info "#{username}'s ticket added successfully." if status is 200
+          return
 
   # Listening for incoming re-subscription notifications.
   # This time we capture the number of months they've been subscribed.
@@ -35,10 +63,10 @@ module.exports = (robot) ->
     if msg.envelope.user.name is 'twitchnotify'
       # Take the name and push it on through.
       username = msg.match[1]
-      pusher.trigger 'live', 'subscribed',
+      pusher.trigger 'live', 'substreak',
         username: username
         length: msg.match[2]
-      robot.logger.info "#{username} has just subscribed!"
+      robot.logger.info "#{username} has been subscribed for #{msg.match[2]} months!"
 
   # Backup command for calling subscribers.
   # Strictly for testing and in case anything goes wrong with TwitchNotify.
