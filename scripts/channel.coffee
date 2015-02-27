@@ -10,6 +10,23 @@ pusher = new Pusher
 
 module.exports = (robot) ->
   # Subscriber functions.
+  activateSubscriber = (username, callback) ->
+    # Take the name and push it on through.
+    puser.trigger 'live', 'resubscribed',
+      username: username
+    robot.logger.info "#{username} has just re-subscribed!"
+
+    # Update the ticket using the API.
+    json = JSON.stringify
+      'is_active': true
+    robot.http("http://avalonstar.tv/api/tickets/#{username}")
+      .header('Content-Type', 'application/json')
+      .put(json) (err, res, body) ->
+        # Success message.
+        ticket = JSON.parse(body)
+        statusCode = res.statusCode
+        callback ticket, statusCode
+
   addSubscriber = (username, callback) ->
     # Take the name and push it on through.
     pusher.trigger 'live', 'subscribed',
@@ -46,9 +63,8 @@ module.exports = (robot) ->
         # This is a re-subscription.
         # The user has been found in the API; they've been a subscriber.
         if res.statusCode is 200
-          puser.trigger 'live', 'resubscribed',
-            username: username
-          robot.logger.info "#{username} has just re-subscribed!"
+          activateSubscriber username, (ticket, status) ->
+            robot.logger.info "#{username}'s ticket reactivated successfully." if status is 200
           return
         # This is a new subscription.
         # The user hasn't been found in the API, so let's create it.
