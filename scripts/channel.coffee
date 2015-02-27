@@ -63,7 +63,7 @@ module.exports = (robot) ->
     if msg.envelope.user.name is 'twitchnotify'
       # Take the name and push it on through.
       username = msg.match[1]
-      pusher.trigger 'live', 'substreak',
+      pusher.trigger 'live', 'substreaked',
         username: username
         length: msg.match[2]
       robot.logger.info "#{username} has been subscribed for #{msg.match[2]} months!"
