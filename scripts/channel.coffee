@@ -36,6 +36,7 @@ module.exports = (robot) ->
     # Create the ticket using the API.
     json = JSON.stringify
       'name': username
+      'is_active': true
     robot.http('http://avalonstar.tv/api/tickets/')
       .header('Content-Type', 'application/json')
       .post(json) (err, res, body) ->
