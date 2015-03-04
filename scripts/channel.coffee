@@ -19,7 +19,7 @@ module.exports = (robot) ->
     # Update the ticket using the API.
     json = JSON.stringify
       'is_active': true
-    robot.http("http://avalonstar.tv/api/tickets/#{username}")
+    robot.http("http://avalonstar.tv/api/tickets/#{username.toLowerCase()}")
       .header('Content-Type', 'application/json')
       .put(json) (err, res, body) ->
         # Success message.
@@ -35,7 +35,7 @@ module.exports = (robot) ->
 
     # Create the ticket using the API.
     json = JSON.stringify
-      'name': username
+      'name': username.toLowerCase()
       'is_active': true
     robot.http('http://avalonstar.tv/api/tickets/')
       .header('Content-Type', 'application/json')
@@ -60,7 +60,7 @@ module.exports = (robot) ->
   robot.hear /^([a-zA-Z0-9_]*) just subscribed!$/, (msg) ->
     if msg.envelope.user.name is 'twitchnotify'
       username = msg.match[1]
-      robot.http("http://avalonstar.tv/api/tickets/#{username}/").get() (err, res, body) ->
+      robot.http("http://avalonstar.tv/api/tickets/#{username.toLowerCase()}/").get() (err, res, body) ->
         # This is a re-subscription.
         # The user has been found in the API; they've been a subscriber.
         if res.statusCode is 200
@@ -96,7 +96,7 @@ module.exports = (robot) ->
   robot.respond /ts ([a-zA-Z0-9_]*)/, (msg) ->
     if msg.envelope.user.name is 'avalonstar'
       username = msg.match[1] or 'Test'
-      robot.http("http://avalonstar.tv/api/tickets/#{username}/").get() (err, res, body) ->
+      robot.http("http://avalonstar.tv/api/tickets/#{username.toLowerCase()}/").get() (err, res, body) ->
         if res.statusCode is 200
           msg.send "#{username} is a subscriber."
         else
