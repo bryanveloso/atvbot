@@ -56,6 +56,25 @@ module.exports = (robot) ->
         username: username
       robot.logger.info "We've been hosted by #{username}."
 
+      # Get the status of the Episode from the API.
+      robot.http('http://avalonstar.tv/live/status/').get() (err, res, body) ->
+        episode = JSON.parse(body)
+
+        # Let's record this host to the Avalonstar API -if- and only if the
+        # episode is marked as episodic.
+        if episode.is_episodic
+          json = JSON.stringify
+            'broadcast': episode.number
+            'hoster': username
+            'timestamp': new Date(Date.now()).toISOString()
+          robot.http('http://avalonstar.tv/api/hosts/')
+            .header('Content-Type', 'application/json')
+            .post(json) (err, res, body) ->
+              if err
+                robot.logger.error "The host by #{query} couldn't be recorded: #{body}"
+                return
+              robot.logger.info "The host by #{query} was recorded: #{body}"
+
   # Listening for incoming subscription notifications. :O
   robot.hear /^([a-zA-Z0-9_]*) just subscribed!$/, (msg) ->
     if msg.envelope.user.name is 'twitchnotify'
